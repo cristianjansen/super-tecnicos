@@ -36,11 +36,13 @@ sudo chmod -R 770 /mnt/DADOS/lixeira
 sudo chmod -R 770 /mnt/DADOS/ti
 sudo chmod -R 770 /mnt/DADOS/diretoria
 
+#!/bin/bash
+
 # Defina a senha padrão
 senha_padrao="labtech@2023"
 
 # Lista de usuários a serem criados
-usuarios=("joao.tech" "maria.tech"
+usuarios=("joao.tech" "maria.tech")
 
 # Lista de grupos a serem criados
 grupos=("TI" "DIRETORIA")
@@ -48,7 +50,7 @@ grupos=("TI" "DIRETORIA")
 # Associação de usuários aos grupos
 declare -A usuarios_grupos
 usuarios_grupos["joao.tech"]="TI"
-usuarios_grupos["maria.tech"]="DIRETORIA"
+usuarios_grupos["maria.tech"]="TI DIRETORIA"
 
 # Loop para criar usuários e adicionar senhas
 for usuario in "${usuarios[@]}"; do
@@ -80,7 +82,7 @@ for usuario in "${!usuarios_grupos[@]}"; do
     done
 done
 
-# Reinicie o serviço Samba
+# Reinicie o serviço Samba (opcional)
 sudo systemctl restart smbd
 
 # Mudar o dono das pastas para o os grupos
