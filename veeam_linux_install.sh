@@ -6,8 +6,23 @@
 apt update && apt upgrade -y
 apt install -y net-tools cifs-utils ntp ntpdate ntfs-3g
 
-# Criando um usuário para o backup
-sudo useradd backup.user
+# Nome do usuário
+usuario="backup.user"
+
+# Senha padrão
+senha_padrao="bkpserver"
+
+# Verifica se o usuário já existe
+if id "$usuario" &>/dev/null; then
+    echo "O usuário $usuario já existe."
+else
+    # Cria o usuário
+    sudo useradd "$usuario"
+    echo "$usuario:$senha_padrao" | sudo chpasswd
+
+    # Confirmação
+    echo "Usuário $usuario criado com a senha padrão '$senha_padrao'."
+fi
 
 # Defina os novos servidores NTP
 novos_servidores=("server a.ntp.br" "server b.ntp.br" "server c.ntp.br")
@@ -42,10 +57,10 @@ sudo chmod -R 770 /mnt/BACKUP
 sudo chown -R root:backup.user /mnt/BACKUP
 
 # 2. Montar a partição NTFS em um diretório no Linux sem formatar
-sudo mount -t ntfs-3g /dev/sdb2 /mnt/BACKUP
+sudo mount -t ntfs-3g /dev/sdb1 /mnt/BACKUP
 
 # 3. Adicionar uma linha ao arquivo /etc/fstab para montar a partição NTFS automaticamente
-echo "UUID=B25643035642C7B5 /mnt/BACKUP ntfs-3g defaults 0 0" | sudo tee -a /etc/fstab
+echo "UUID=4E55231A061070A4 /mnt/BACKUP ntfs-3g defaults 0 0" | sudo tee -a /etc/fstab
 
 # 4. Verificar se a partição está montada corretamente
 df -h
